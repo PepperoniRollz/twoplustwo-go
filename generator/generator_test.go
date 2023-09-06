@@ -1,70 +1,32 @@
 package generator
 
 import (
-	"encoding/binary"
 	"fmt"
-	"os"
-	"sort"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func InitTheEvaluator() []int64 {
-	file, err := os.Open("../HandRanks.dat")
-	if err != nil {
-		fmt.Println("Error opening file:", err)
-	}
-	defer file.Close()
-
-	HR := make([]int64, 32487834)
-	if err := binary.Read(file, binary.LittleEndian, &HR); err != nil {
-		fmt.Println("Error reading HR data:", err)
-
-	}
-	return HR
-}
-
-func GetHandValue(pCards []int, HR []int64) int64 {
-
-	var p int64 = 53
-	size := len(pCards)
-	for i := 0; i < size; i++ {
-		p = HR[p+int64(pCards[i])]
-	}
-
-	if size == 5 || size == 6 {
-		p = HR[p]
-	}
-
-	return p
-}
-
 func TestGenerator(t *testing.T) {
-	var Hr []int64 = InitTheEvaluator()
 	fmt.Println("Initialization complete.")
 
-	pCards := []int{1, 5, 9, 13, 25, 52} // Example card values
-	result := GetHandValue(pCards, Hr)
+	handTypeSum := make([]int, 10)
+	assert.Equal(t, 133784560, handTypeSum[1]+handTypeSum[2]+handTypeSum[3]+handTypeSum[4]+handTypeSum[5]+handTypeSum[6]+handTypeSum[7]+handTypeSum[8]+handTypeSum[9], "correct total number of 7 card hands")
+	assert.Equal(t, 0, handTypeSum[0], "correct number of invalid hands")
+	assert.Equal(t, 23294460, handTypeSum[1], "correct number of high card hands")
+	assert.Equal(t, 58627800, handTypeSum[2], "correct number of one pair hands")
+	assert.Equal(t, 31433400, handTypeSum[3], "correct number of two pair hands")
+	assert.Equal(t, 6461620, handTypeSum[4], "correct number of trips hands")
+	assert.Equal(t, 6180020, handTypeSum[5], "correct number of straight hands")
+	assert.Equal(t, 4047644, handTypeSum[6], "correct number of flush hands")
+	assert.Equal(t, 3473184, handTypeSum[7], "correct number of full house hands")
+	assert.Equal(t, 224848, handTypeSum[8], "correct number of quads hands")
+	assert.Equal(t, 41584, handTypeSum[9], "correct number of straight flush hands")
 
-	handCategory := result >> 12
-	rankWithinCategory := result & 0x00000FFF
-
-	sort.Ints(pCards)
-	var hand []string
-	for _, v := range pCards {
-		hand = append(hand, CARD_MAP[v])
-	}
-	fmt.Println(hand)
-	fmt.Println("Hand value:", result)
-
-	fmt.Println("Hand category:", HAND_TYPES[int(handCategory)])
-
-	fmt.Println("rank within category:", rankWithinCategory)
-
-	EnumerateAll7CardHands(Hr)
 }
 
-func EnumerateAll7CardHands(HR []int64) {
+func EnumerateAll7CardHands(HR []int64) []int {
 	var u0, u1, u2, u3, u4, u5 int64
 	var c0, c1, c2, c3, c4, c5, c6 int64
 	handTypeSum := make([]int, 10)
@@ -110,15 +72,15 @@ func EnumerateAll7CardHands(HR []int64) {
 	fmt.Printf("Quads:            %d\n", handTypeSum[8])
 	fmt.Printf("Straight Flush:   %d\n", handTypeSum[9])
 
-	// Perform sanity checks.. make sure numbers are where they should be
 	testCount := 0
 	for _, val := range handTypeSum {
 		testCount += val
 	}
 	if testCount != count || count != 133784560 || handTypeSum[0] != 0 {
 		fmt.Println("\nERROR!\nERROR!\nERROR!")
-		return
+		return []int{0}
 	}
 
 	fmt.Printf("\nEnumerated %d hands in %v!\n", count, elapsedTime)
+	return handTypeSum
 }

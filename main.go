@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"os"
 	"time"
-	gen "twoplustwo/generator"
-)
 
-var numCards *int = new(int)
+	gen "github.com/pepperonirollz/twoplustwo-go/generator"
+)
 
 func main() {
 	var IdSlot, card, count int = 0, 0, 0
@@ -32,7 +31,7 @@ func main() {
 		"Straight Flush",
 	}
 
-	HR := make([]int64, 32487834)
+	HR := make([]int, 32487834)
 
 	var numIds *int = new(int)
 	*numIds = 1
@@ -54,6 +53,7 @@ func main() {
 
 		}
 	}
+
 	fmt.Printf("\nSetting Handranks!\n")
 
 	for IdNum = 0; IDs[IdNum] != 0 || IdNum == 0; IdNum++ {
@@ -68,20 +68,20 @@ func main() {
 			}
 
 			*maxHR = IdNum*53 + card + 53
-			HR[*maxHR] = int64(IdSlot)
+			HR[*maxHR] = IdSlot
 			fmt.Printf("\rID - %d", IdNum) // Just to show progress, counting up to 612976.
 		}
 		if *numCards == 6 || *numCards == 7 {
-			HR[IdNum*53+53] = int64(gen.DoEval(IDs[IdNum])) // this puts the above handrank into the array
+			HR[IdNum*53+53] = gen.DoEval(IDs[IdNum]) // this puts the above handrank into the array
 
 		}
 
 	}
 
-	fmt.Printf("\nNumber IDs = %d\nmaxHR = %d\n", numIds, maxHR)
+	fmt.Printf("\nNumber IDs = %d\nmaxHR = %d\n", *numIds, *maxHR)
 
-	var c0, c1, c2, c3, c4, c5, c6 int64
-	var u0, u1, u2, u3, u4, u5 int64
+	var c0, c1, c2, c3, c4, c5, c6 int
+	var u0, u1, u2, u3, u4, u5 int
 
 	timings := time.Now() // Start a timer
 
@@ -127,7 +127,6 @@ func main() {
 	byteArray := make([]byte, len(HR)*8)
 
 	for i, v := range HR {
-		// fmt.Println(v)
 		binary.LittleEndian.PutUint64(byteArray[i*8:], uint64(v))
 	}
 

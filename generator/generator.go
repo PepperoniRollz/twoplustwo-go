@@ -3,6 +3,8 @@ package generator
 import (
 	"fmt"
 	"math"
+
+	c "github.com/pepperonirollz/twoplustwo-go/constants"
 )
 
 func swap(i int, j int, workcards []int) {
@@ -54,7 +56,7 @@ func MakeId(IDin int64, newcard int, numCards *int) int64 {
 	}
 
 	if needsuited > 1 {
-		for cardnum := 0; cardnum < *numCards; cardnum++ {
+		for cardnum = 0; cardnum < *numCards; cardnum++ {
 			if suitCount[workcards[cardnum]&0xf] < needsuited {
 				workcards[cardnum] &= 0xf0 // mask out suit
 			}
@@ -128,35 +130,30 @@ func SaveId(ID int64, IDs []int64, numIds *int, maxId *int64) int {
 func DoEval(IDin int64) int {
 	var handrank int = 0
 	var cardnum int
-	var workcard int
-	var rank int
-	var suit int
 	var mainsuit int = 20
-	var suititerator int = 0
+	var suititerator int = 1
 	var holdrank int
 	var workcards [8]int
 	var holdcards [8]int
 	var numevalcards int = 0
 
 	if IDin != 0 {
-		for cardnum = 0; cardnum < 7; cardnum++ {
-			holdcards[cardnum] = (int)((IDin >> (8 * cardnum)) & 0xff)
+
+		for cardnum := 0; cardnum < 7; cardnum++ {
+			holdcards[cardnum] = int((IDin >> (8 * cardnum)) & 0xff)
 			if holdcards[cardnum] == 0 {
 				break
 			}
 			numevalcards++
-			if suit == holdcards[cardnum]&0xf {
+			if suit := holdcards[cardnum] & 0xf; suit != 0 {
 				mainsuit = suit
 			}
-
 		}
 
-		for cardnum = 0; cardnum < numevalcards; cardnum++ {
-			workcard = holdcards[cardnum]
-
-			rank = (workcard >> 4) - 1
-			suit = workcard & 0xf
-
+		for cardnum := 0; cardnum < numevalcards; cardnum++ {
+			workcard := holdcards[cardnum]
+			rank := (workcard >> 4) - 1
+			suit := workcard & 0xf
 			if suit == 0 {
 				suit = suititerator
 				suititerator++
@@ -171,20 +168,20 @@ func DoEval(IDin int64) int {
 					}
 				}
 			}
-			workcards[cardnum] = PRIMES[rank] | (rank << 8) | (1 << (suit + 11)) | 1<<(16+rank)
+			workcards[cardnum] = c.PRIMES[rank] | (rank << 8) | (1 << (suit + 11)) | (1 << (16 + rank))
 		}
 		switch numevalcards {
 		case 5:
-			holdrank = eval5HandFast(uint32(workcards[0]), uint32(workcards[1]), uint32(workcards[2]), uint32(workcards[3]), uint32(workcards[4]))
+			holdrank = eval5HandFast(workcards[0], workcards[1], (workcards[2]), workcards[3], workcards[4])
 			break
 
 		case 6:
-			holdrank = eval5HandFast(uint32(workcards[0]), uint32(workcards[1]), uint32(workcards[2]), uint32(workcards[3]), uint32(workcards[4]))
-			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(uint32(workcards[0]), uint32(workcards[1]), uint32(workcards[2]), uint32(workcards[3]), uint32(workcards[5])))))
-			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(uint32(workcards[0]), uint32(workcards[1]), uint32(workcards[2]), uint32(workcards[4]), uint32(workcards[5])))))
-			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(uint32(workcards[0]), uint32(workcards[1]), uint32(workcards[3]), uint32(workcards[4]), uint32(workcards[5])))))
-			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(uint32(workcards[0]), uint32(workcards[2]), uint32(workcards[3]), uint32(workcards[4]), uint32(workcards[5])))))
-			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(uint32(workcards[1]), uint32(workcards[2]), uint32(workcards[3]), uint32(workcards[4]), uint32(workcards[5])))))
+			holdrank = eval5HandFast(workcards[0], workcards[1], workcards[2], (workcards[3]), (workcards[4]))
+			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(workcards[0], workcards[1], workcards[2], workcards[3], workcards[5]))))
+			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(workcards[0], workcards[1], workcards[2], workcards[4], workcards[5]))))
+			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(workcards[0], workcards[1], workcards[3], workcards[4], workcards[5]))))
+			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(workcards[0], workcards[2], workcards[3], workcards[4], workcards[5]))))
+			holdrank = int(math.Min(float64(holdrank), float64(eval5HandFast(workcards[1], workcards[2], workcards[3], workcards[4], workcards[5]))))
 			break
 		case 7:
 			holdrank = eval7hand(workcards)
