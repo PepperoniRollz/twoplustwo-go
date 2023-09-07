@@ -13,7 +13,7 @@ type HandEvaluation struct {
 	Hand               string
 }
 
-func NewHand(p int64, pCards []d.Card) HandEvaluation {
+func newHandEval(p int64, pCards []d.Card) HandEvaluation {
 
 	return HandEvaluation{
 		HandCategory:       int(p >> 12),

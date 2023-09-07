@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	card "github.com/pepperonirollz/twoplustwo-go/card"
+	combos "github.com/pepperonirollz/twoplustwo-go/combinations"
 	eval "github.com/pepperonirollz/twoplustwo-go/evaluator"
 )
 
@@ -14,30 +15,6 @@ type Simulator struct {
 
 func NewSimulator(deck card.Deck, players []card.Player) Simulator {
 	return Simulator{Deck: deck, Players: players}
-}
-
-func generate(deck, current card.CardSet, k, index int, combinations *[]card.CardSet) {
-	if current.Length() == k {
-		set := card.EmptyCardSet()
-		set.AddCards(current)
-		*combinations = append(*combinations, set)
-
-		return
-	}
-	if index >= deck.Length() {
-		return
-	}
-
-	current.AddCard(deck.Get(index))
-	generate(deck, current, k, index+1, combinations)
-	current.Cards = current.Cards[:current.Length()-1]
-	generate(deck, current, k, index+1, combinations)
-}
-
-func GenerateCombos(deck card.CardSet, k int) []card.CardSet {
-	var combinations []card.CardSet
-	generate(deck, card.CardSet{}, k, 0, &combinations)
-	return combinations
 }
 
 func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) {
@@ -58,7 +35,7 @@ func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) {
 	ties := 0
 	equities := make([]float64, len(holeCards))
 	numCardsInRunout := 5 - board.Length()
-	combinations := GenerateCombos(deckCardSet, numCardsInRunout)
+	combinations := combos.GenerateCombos(deckCardSet, numCardsInRunout)
 	evaluator := eval.NewEvaluator("../HandRanks.dat")
 
 	for i := 0; i < len(combinations); i++ {

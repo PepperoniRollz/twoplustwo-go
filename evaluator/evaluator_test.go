@@ -18,8 +18,8 @@ func TestEvaluator(t *testing.T) {
 	result2 := evaluator.GetHandValue(h2)
 	assert.Equal(t, -1, evaluator.CompareHands(result1, result2), "correct comparison result") // 2222A < 3333A
 
-	fmt.Println(evaluator.CompareHands(result1, result2))
-	result1.Print()
-	result2.Print()
+	// fmt.Println(evaluator.CompareHands(result1, result2))
+	// result1.Print()
+	// result2.Print()
 
 }
