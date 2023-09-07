@@ -26,3 +26,7 @@ func FromString(s string) Card {
 func (card *Card) Print() {
 	println(c.CARD_MAP[card.Value])
 }
+
+func (card *Card) ToString() string {
+	return c.CARD_MAP[card.Value]
+}

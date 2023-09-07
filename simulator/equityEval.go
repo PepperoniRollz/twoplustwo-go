@@ -79,3 +79,20 @@ func (e *EquityEvaluation) PrintEquities() {
 	}
 	fmt.Println(e)
 }
+
+func (e *EquityEvaluation) Print() {
+	fmt.Println("--------------------------------------------------------")
+	fmt.Printf("| %-10s | %-10s | %-10s | %-10s | %-20s |\n", "Equity", "Wins", "Losses", "Ties", "Hole Cards")
+	fmt.Println("--------------------------------------------------------")
+
+	for i := range e.Equities {
+		holeCardsStr := ""
+		if len(e.HoleCards) > i {
+			holeCardsStr = e.HoleCards[i].ToString()
+		}
+
+		fmt.Printf("| %-10.2f | %-10d | %-10d | %-10d | %-20s |\n", e.Equities[i], e.Wins[i], e.Losses[i], e.Ties[i], holeCardsStr)
+	}
+
+	fmt.Println("--------------------------------------------------------")
+}

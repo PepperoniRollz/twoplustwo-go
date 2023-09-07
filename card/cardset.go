@@ -57,3 +57,11 @@ func NewBoard(cardString string) CardSet {
 	hand.FromString(cardString)
 	return hand
 }
+
+func (c *CardSet) ToString() string {
+	var s string
+	for i := 0; i < len(c.Cards); i++ {
+		s += c.Cards[i].ToString()
+	}
+	return s
+}

@@ -1,15 +1,13 @@
 package simulator
 
 import (
-	"fmt"
-
 	card "github.com/pepperonirollz/twoplustwo-go/card"
 	combos "github.com/pepperonirollz/twoplustwo-go/combinations"
 	eval "github.com/pepperonirollz/twoplustwo-go/evaluator"
 )
 
 // EquityEvaluator takes a slice of hole cards and a board and returns an EquityEvaluation
-func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) {
+func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) EquityEvaluation {
 	deck := card.NewDeck()
 	equityEval := NewEquityEvaluation(holeCards, board)
 
@@ -37,22 +35,8 @@ func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) {
 			handEvals[j] = evaluator.GetHandValue(hand)
 		}
 		equityEval.EvaluateEquities(handEvals)
-		// j := 0
-		// if evaluator.CompareHands(handEvals[j], handEvals[j+1]) > 0 {
-		// 	wins[j]++
-		// } else if evaluator.CompareHands(handEvals[j], handEvals[j+1]) < 0 {
-		// 	wins[j+1]++
-		// } else {
-		// 	ties++
-		// }
 	}
 
 	equityEval.CalculateEquities()
-	equityEval.PrintEquities()
-	// for i := 0; i < len(holeCards); i++ {
-	// 	equities[i] = float64(wins[i]) / float64(len(combinations))
-	// }
-	// fmt.Println(equities)
-	fmt.Println(len(combinations))
-	// fmt.Println(float64(ties) / float64(len(combinations)))
+	return equityEval
 }
