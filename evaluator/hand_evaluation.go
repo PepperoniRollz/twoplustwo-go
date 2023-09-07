@@ -3,8 +3,8 @@ package evaluator
 import (
 	"fmt"
 
+	d "github.com/pepperonirollz/twoplustwo-go/card"
 	c "github.com/pepperonirollz/twoplustwo-go/constants"
-	d "github.com/pepperonirollz/twoplustwo-go/deck"
 )
 
 type HandEvaluation struct {

@@ -5,13 +5,17 @@ import (
 	"testing"
 	"time"
 
+	e "github.com/pepperonirollz/twoplustwo-go/evaluator"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerator(t *testing.T) {
+	evaluator := e.NewEvaluator("../HandRanks.dat")
+
 	fmt.Println("Initialization complete.")
 
-	handTypeSum := make([]int, 10)
+	handTypeSum := EnumerateAll7CardHands(evaluator.HR)
+
 	assert.Equal(t, 133784560, handTypeSum[1]+handTypeSum[2]+handTypeSum[3]+handTypeSum[4]+handTypeSum[5]+handTypeSum[6]+handTypeSum[7]+handTypeSum[8]+handTypeSum[9], "correct total number of 7 card hands")
 	assert.Equal(t, 0, handTypeSum[0], "correct number of invalid hands")
 	assert.Equal(t, 23294460, handTypeSum[1], "correct number of high card hands")
