@@ -32,7 +32,7 @@ var CARD_CODE = map[string]int{
 	"Ac": 49, "Ad": 50, "Ah": 51, "As": 52,
 }
 var HAND_TYPES = map[int]string{
-	0: "Bad Hand",
+	0: "Invalid",
 	1: "High Card",
 	2: "One Pair",
 	3: "Two Pair",

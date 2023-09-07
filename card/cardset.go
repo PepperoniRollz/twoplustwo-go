@@ -52,3 +52,8 @@ func NewHand(cardString string) CardSet {
 	hand.FromString(cardString)
 	return hand
 }
+func NewBoard(cardString string) CardSet {
+	var hand CardSet
+	hand.FromString(cardString)
+	return hand
+}

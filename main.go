@@ -19,7 +19,7 @@ func main() {
 
 	IDs := make([]int64, 612978)
 	var handRanks = [...]string{
-		"BAD!!",
+		"Invalid",
 		"High Card",
 		"Pair",
 		"Two Pair",
