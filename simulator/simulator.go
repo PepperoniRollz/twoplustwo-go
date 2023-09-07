@@ -8,18 +8,10 @@ import (
 	eval "github.com/pepperonirollz/twoplustwo-go/evaluator"
 )
 
-type Simulator struct {
-	Deck    card.Deck
-	Players []card.Player
-}
-
-func NewSimulator(deck card.Deck, players []card.Player) Simulator {
-	return Simulator{Deck: deck, Players: players}
-}
-
+// EquityEvaluator takes a slice of hole cards and a board and returns an EquityEvaluation
 func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) {
-
 	deck := card.NewDeck()
+	equityEval := NewEquityEvaluation(holeCards, board)
 
 	for i := 0; i < len(holeCards); i++ {
 		deck.RemoveCards(holeCards[i])
@@ -31,9 +23,7 @@ func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) {
 		}
 	}
 	deckCardSet := deck.CurrentState
-	wins := make([]int, len(holeCards))
-	ties := 0
-	equities := make([]float64, len(holeCards))
+	// equities := make([]float64, len(holeCards))
 	numCardsInRunout := 5 - board.Length()
 	combinations := combos.GenerateCombos(deckCardSet, numCardsInRunout)
 	evaluator := eval.NewEvaluator("../HandRanks.dat")
@@ -46,19 +36,23 @@ func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) {
 			hand.AddCards(combinations[i])
 			handEvals[j] = evaluator.GetHandValue(hand)
 		}
-		j := 0
-		if evaluator.CompareHands(handEvals[j], handEvals[j+1]) > 0 {
-			wins[j]++
-		} else if evaluator.CompareHands(handEvals[j], handEvals[j+1]) < 0 {
-			wins[j+1]++
-		} else {
-			ties++
-		}
+		equityEval.EvaluateEquities(handEvals)
+		// j := 0
+		// if evaluator.CompareHands(handEvals[j], handEvals[j+1]) > 0 {
+		// 	wins[j]++
+		// } else if evaluator.CompareHands(handEvals[j], handEvals[j+1]) < 0 {
+		// 	wins[j+1]++
+		// } else {
+		// 	ties++
+		// }
 	}
-	for i := 0; i < len(holeCards); i++ {
-		equities[i] = float64(wins[i]) / float64(len(combinations))
-	}
-	fmt.Println(equities)
+
+	equityEval.CalculateEquities()
+	equityEval.PrintEquities()
+	// for i := 0; i < len(holeCards); i++ {
+	// 	equities[i] = float64(wins[i]) / float64(len(combinations))
+	// }
+	// fmt.Println(equities)
 	fmt.Println(len(combinations))
-	fmt.Println(float64(ties) / float64(len(combinations)))
+	// fmt.Println(float64(ties) / float64(len(combinations)))
 }

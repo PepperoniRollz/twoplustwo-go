@@ -33,18 +33,13 @@ func (e *Evaluator) GetHandValue(pCards card.CardSet) HandEvaluation {
 }
 
 func (e *Evaluator) CompareHands(hand1 HandEvaluation, hand2 HandEvaluation) int {
-	if hand1.HandCategory > hand2.HandCategory {
+
+	if hand1.P > hand2.P {
 		return 1
-	} else if hand1.HandCategory < hand2.HandCategory {
+	} else if hand1.P < hand2.P {
 		return -1
 	} else {
-		if hand1.RankWithinCategory > hand2.RankWithinCategory {
-			return 1
-		} else if hand1.RankWithinCategory < hand2.RankWithinCategory {
-			return -1
-		} else {
-			return 0
-		}
+		return 0
 	}
 }
 
