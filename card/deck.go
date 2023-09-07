@@ -40,3 +40,9 @@ func (d *Deck) RemoveCard(card Card) {
 		}
 	}
 }
+
+func (d *Deck) RemoveCards(cards CardSet) {
+	for i := 0; i < cards.Length(); i++ {
+		d.RemoveCard(cards.Get(i))
+	}
+}

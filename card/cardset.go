@@ -10,6 +10,9 @@ func (c *CardSet) FromString(s string) {
 	}
 }
 
+func EmptyCardSet() CardSet {
+	return CardSet{Cards: make([]Card, 0)}
+}
 func NewCardSet(n int) CardSet {
 	return CardSet{Cards: make([]Card, n)}
 }
@@ -42,4 +45,10 @@ func (c *CardSet) AddCard(card Card) {
 
 func (c *CardSet) AddCards(cards CardSet) {
 	c.Cards = append(c.Cards, cards.Cards...)
+}
+
+func NewHand(cardString string) CardSet {
+	var hand CardSet
+	hand.FromString(cardString)
+	return hand
 }
