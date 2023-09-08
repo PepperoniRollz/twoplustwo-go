@@ -4,9 +4,9 @@ type CardSet struct {
 	Cards []Card
 }
 
-func (c *CardSet) FromString(s string) {
+func (cs *CardSet) FromString(s string) {
 	for i := 0; i < len(s); i += 2 {
-		c.Cards = append(c.Cards, FromString(s[i:i+2]))
+		cs.Cards = append(cs.Cards, FromString(s[i:i+2]))
 	}
 }
 
@@ -17,34 +17,34 @@ func NewCardSet(n int) CardSet {
 	return CardSet{Cards: make([]Card, n)}
 }
 
-func (c *CardSet) Print() {
-	for i := 0; i < len(c.Cards); i++ {
-		c.Cards[i].Print()
+func (cs *CardSet) Print() {
+	for i := 0; i < len(cs.Cards); i++ {
+		cs.Cards[i].Print()
 	}
 }
 
-func (c *CardSet) Length() int {
-	return len(c.Cards)
+func (cs *CardSet) Length() int {
+	return len(cs.Cards)
 }
 
-func (c *CardSet) Get(i int) Card {
-	return c.Cards[i]
+func (cs *CardSet) Get(i int) Card {
+	return cs.Cards[i]
 }
 
-func (c *CardSet) Set(i int, card Card) {
-	c.Cards[i] = card
+func (cs *CardSet) Set(i int, card Card) {
+	cs.Cards[i] = card
 }
 
-func (c *CardSet) swap(i int, j int) {
-	c.Cards[i], c.Cards[j] = c.Cards[j], c.Cards[i]
+func (cs *CardSet) swap(i int, j int) {
+	cs.Cards[i], cs.Cards[j] = cs.Cards[j], cs.Cards[i]
 }
 
-func (c *CardSet) AddCard(card Card) {
-	c.Cards = append(c.Cards, card)
+func (cs *CardSet) AddCard(card Card) {
+	cs.Cards = append(cs.Cards, card)
 }
 
-func (c *CardSet) AddCards(cards CardSet) {
-	c.Cards = append(c.Cards, cards.Cards...)
+func (cs *CardSet) AddCards(cards CardSet) {
+	cs.Cards = append(cs.Cards, cards.Cards...)
 }
 
 func NewHand(cardString string) CardSet {
@@ -58,10 +58,10 @@ func NewBoard(cardString string) CardSet {
 	return hand
 }
 
-func (c *CardSet) ToString() string {
+func (cs *CardSet) ToString() string {
 	var s string
-	for i := 0; i < len(c.Cards); i++ {
-		s += c.Cards[i].ToString()
+	for i := 0; i < len(cs.Cards); i++ {
+		s += cs.Cards[i].ToString()
 	}
 	return s
 }

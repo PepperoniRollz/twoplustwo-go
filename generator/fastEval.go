@@ -1,7 +1,7 @@
 package generator
 
 import (
-	c "github.com/pepperonirollz/twoplustwo-go/constants"
+	constants "github.com/pepperonirollz/twoplustwo-go/constants"
 )
 
 var flushCount int = 0
@@ -12,15 +12,15 @@ func eval5HandFast(c1, c2, c3, c4, c5 int) int {
 
 	if c1&c2&c3&c4&c5&0xf000 != 0 {
 
-		return int(c.FLUSHES[q])
+		return int(constants.GetFlushes()[q])
 
 	}
-	s = c.UNIQUE_5[q]
+	s = constants.GetUnique5()[q]
 	if s != 0 {
 		return int(s)
 	}
 
-	return int(c.HASH_VALUES[findFast(uint32((c1&0xff)*(c2&0xff)*(c3&0xff)*(c4&0xff)*(c5&0xff)))])
+	return int(constants.GetHashValues()[findFast(uint32((c1&0xff)*(c2&0xff)*(c3&0xff)*(c4&0xff)*(c5&0xff)))])
 }
 
 func findFast(u uint32) uint32 {
@@ -31,7 +31,7 @@ func findFast(u uint32) uint32 {
 	u ^= u >> 4
 	b = (u >> 8) & 0x1ff
 	a = (u + (u << 2)) >> 19
-	r = a ^ uint32(c.HASH_ADJUST[b])
+	r = a ^ uint32(constants.GetHashAdjust()[b])
 	return r
 }
 
@@ -41,7 +41,7 @@ func eval7hand(hand [8]int) int {
 
 	for i := 0; i < 21; i++ {
 		for j := 0; j < 5; j++ {
-			subhand[j] = hand[c.PERM_7[i][j]]
+			subhand[j] = hand[constants.GetPerm7()[i][j]]
 		}
 		q := eval5hand(subhand)
 		if q < best {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	d "github.com/pepperonirollz/twoplustwo-go/card"
-	c "github.com/pepperonirollz/twoplustwo-go/constants"
+	constants "github.com/pepperonirollz/twoplustwo-go/constants"
 )
 
 type HandEvaluation struct {
@@ -25,14 +25,14 @@ func newHandEval(p int64, pCards []d.Card) HandEvaluation {
 }
 
 func (h *HandEvaluation) Print() {
-	fmt.Println(h.Hand, c.HAND_TYPES[h.HandCategory], h.RankWithinCategory, h.P)
+	fmt.Println(h.Hand, constants.GetHandTypes()[h.HandCategory], h.RankWithinCategory, h.P)
 
 }
 
 func cardsToString(cards []d.Card) string {
 	var s string
 	for i := 0; i < len(cards); i++ {
-		s += c.CARD_MAP[cards[i].Value] + " "
+		s += constants.GetCardMap()[cards[i].Value] + " "
 	}
 	return s
 }
