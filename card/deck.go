@@ -19,7 +19,7 @@ func NewDeck() Deck {
 	return deck
 }
 
-func (d *Deck) Shuffle() {
+func (d *Deck) Shuffle(r *rand.Rand) {
 	for i := 0; i < d.CurrentState.Length(); i++ {
 		j := rand.Intn(i + 1)
 		d.CurrentState.swap(i, j)
