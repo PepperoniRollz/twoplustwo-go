@@ -9,21 +9,25 @@ import (
 
 type EquityEvaluation struct {
 	Equities  []float64
-	Ties      []int
+	TieEquity []float64
 	Wins      []int
 	Losses    []int
+	Ties      []int
 	HoleCards []card.CardSet
 	Board     card.CardSet
 }
 
 func NewEquityEvaluation(holeCards []card.CardSet, board card.CardSet) EquityEvaluation {
 	size := len(holeCards)
+	hc := make([]card.CardSet, len(holeCards))
+	copy(hc, holeCards)
 	return EquityEvaluation{
 		Equities:  make([]float64, size),
+		TieEquity: make([]float64, size),
 		Ties:      make([]int, size),
 		Wins:      make([]int, size),
 		Losses:    make([]int, size),
-		HoleCards: holeCards,
+		HoleCards: hc,
 		Board:     board,
 	}
 }
@@ -65,10 +69,13 @@ func (e *EquityEvaluation) EvaluateEquities(handEvals []eval.HandEvaluation) {
 	}
 }
 
+//this does not account for the instance where, for example, one hand wins, and the other 2 hands are ties/chops.  In this scenario, there is one winner and 2 losers.
+
 func (e *EquityEvaluation) CalculateEquities() {
 	size := len(e.HoleCards)
 	for i := 0; i < size; i++ {
 		e.Equities[i] = float64(e.Wins[i]) / float64(e.Wins[i]+e.Losses[i]+e.Ties[i])
+		e.TieEquity[i] = float64(e.Ties[i]) / float64(e.Wins[i]+e.Losses[i]+e.Ties[i])
 	}
 }
 
@@ -81,9 +88,9 @@ func (e *EquityEvaluation) PrintEquities() {
 }
 
 func (e *EquityEvaluation) Print() {
-	fmt.Println("--------------------------------------------------------")
-	fmt.Printf("| %-10s | %-10s | %-10s | %-10s | %-20s |\n", "Equity", "Wins", "Losses", "Ties", "Hole Cards")
-	fmt.Println("--------------------------------------------------------")
+	fmt.Println("----------------------------------------------------------------------------------")
+	fmt.Printf(" %-10s | %-10s |%-10s | %-10s | %-10s | %-10s | %-10s |\n", "Hole Cards", "Board", "Equity", "TieEquity", "Wins", "Losses", "Ties")
+	fmt.Println("----------------------------------------------------------------------------------")
 
 	for i := range e.Equities {
 		holeCardsStr := ""
@@ -91,8 +98,8 @@ func (e *EquityEvaluation) Print() {
 			holeCardsStr = e.HoleCards[i].ToString()
 		}
 
-		fmt.Printf("| %-10.2f | %-10d | %-10d | %-10d | %-20s |\n", e.Equities[i], e.Wins[i], e.Losses[i], e.Ties[i], holeCardsStr)
+		fmt.Printf(" %-10s | %-10s |%-10.4f | %-10.4f | %-10d | %-10d | %-10d | \n", holeCardsStr, e.Board.ToString(), e.Equities[i], e.TieEquity[i], e.Wins[i], e.Losses[i], e.Ties[i])
 	}
 
-	fmt.Println("--------------------------------------------------------")
+	fmt.Println("-----------------------------------------------------------------------------------")
 }
