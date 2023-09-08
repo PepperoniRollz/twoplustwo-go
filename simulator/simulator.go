@@ -6,6 +6,12 @@ import (
 	eval "github.com/pepperonirollz/twoplustwo-go/evaluator"
 )
 
+var evaluator eval.Evaluator
+
+func init() {
+	evaluator = eval.NewEvaluator("../HandRanks.dat")
+}
+
 // EquityEvaluator takes a slice of hole cards and a board and returns an EquityEvaluation
 func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) EquityEvaluation {
 	deck := card.NewDeck()
@@ -24,7 +30,6 @@ func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) EquityEvaluat
 	// equities := make([]float64, len(holeCards))
 	numCardsInRunout := 5 - board.Length()
 	combinations := combos.GenerateCombos(deckCardSet, numCardsInRunout)
-	evaluator := eval.NewEvaluator("../HandRanks.dat")
 
 	for i := 0; i < len(combinations); i++ {
 		handEvals := make([]eval.HandEvaluation, len(holeCards))

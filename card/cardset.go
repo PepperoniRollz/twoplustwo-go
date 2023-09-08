@@ -46,7 +46,19 @@ func (cs *CardSet) AddCard(card Card) {
 func (cs *CardSet) AddCards(cards CardSet) {
 	cs.Cards = append(cs.Cards, cards.Cards...)
 }
+func NewHandFromCodes(codes []int) CardSet {
+	var hand CardSet
+	for i := 0; i < len(codes); i++ {
+		hand.AddCard(Card(FromCode(codes[i])))
+	}
+	return hand
+}
 
+func FromCards(cards []Card) CardSet {
+	var cardSet CardSet
+	cardSet.Cards = cards
+	return cardSet
+}
 func NewHand(cardString string) CardSet {
 	var hand CardSet
 	hand.FromString(cardString)

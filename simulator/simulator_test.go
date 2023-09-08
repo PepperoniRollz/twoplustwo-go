@@ -1,21 +1,30 @@
 package simulator
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 
 	card "github.com/pepperonirollz/twoplustwo-go/card"
 )
 
-func TestSimulator(t *testing.T) {
+var r *rand.Rand
 
-	player1 := card.NewHand("AhAd")
-	player2 := card.NewHand("KsKc")
-	player3 := card.NewHand("QsQc")
-	player4 := card.NewHand("JsJc")
-	// board := card.NewBoard("5h6h7s")
+func init() {
+	r = rand.New(rand.NewSource(time.Now().Unix()))
+}
+
+func TestSimulator(t *testing.T) {
+	players := make([]card.CardSet, r.Intn(10)+2)
+	deck := card.NewDeck()
+	deck.Shuffle()
+	for i := 0; i < len(players); i++ {
+		players[i] = card.FromCards([]card.Card{deck.DealOne(), deck.DealOne()})
+	}
+
 	board := card.EmptyCardSet()
 
-	equityEval := EquityEvaluator([]card.CardSet{player1, player2, player3, player4}, board)
+	equityEval := EquityEvaluator(players, board)
 	equityEval.Print()
 }
 
