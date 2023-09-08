@@ -1,10 +1,8 @@
-package generator
+package twoplustwogo
 
 import (
 	"fmt"
 	"math"
-
-	constants "github.com/pepperonirollz/twoplustwo-go/constants"
 )
 
 func swap(i int, j int, workcards []int) {
@@ -168,7 +166,7 @@ func DoEval(IDin int64) int {
 					}
 				}
 			}
-			workcards[cardnum] = constants.GetPrimes()[rank] | (rank << 8) | (1 << (suit + 11)) | (1 << (16 + rank))
+			workcards[cardnum] = GetPrimes()[rank] | (rank << 8) | (1 << (suit + 11)) | (1 << (16 + rank))
 		}
 		switch numevalcards {
 		case 5:

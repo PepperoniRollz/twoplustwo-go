@@ -1,18 +1,17 @@
-package evaluator
+package twoplustwogo
 
 import (
 	"fmt"
 	"testing"
 
-	card "github.com/pepperonirollz/twoplustwo-go/card"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestEvaluator(t *testing.T) {
 	evaluator := NewEvaluator("../HandRanks.dat")
 	fmt.Println("Initialization complete.")
-	h1 := card.NewHand("TsJsQsKsAs")
-	h2 := card.NewHand("9sTsJsQsKs")
+	h1 := NewHand("TsJsQsKsAs")
+	h2 := NewHand("9sTsJsQsKs")
 
 	result1 := evaluator.GetHandValue(h1)
 	result2 := evaluator.GetHandValue(h2)

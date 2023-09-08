@@ -1,20 +1,15 @@
-package evaluator
+package twoplustwogo
 
 import (
 	"testing"
-
-	card "github.com/pepperonirollz/twoplustwo-go/card"
-	combos "github.com/pepperonirollz/twoplustwo-go/combinations"
 )
 
-var deck = card.NewDeck()
-
-var evaluator = NewEvaluator("../HandRanks.dat")
+var deck = NewDeck()
 
 func BenchmarkEvaluator(b *testing.B) {
 	//split the hands into two equal parts
 	// this generates all C(52,5) = 2,598,960 possible hands
-	var hands []card.CardSet = combos.GenerateCombos(deck.CurrentState, 5)
+	var hands []CardSet = GenerateCombos(deck.CurrentState, 5)
 	hands1 := hands[:len(hands)/2]
 	hands2 := hands[len(hands)/2:]
 

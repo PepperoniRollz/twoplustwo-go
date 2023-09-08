@@ -1,10 +1,8 @@
-package combos
+package twoplustwogo
 
-import "github.com/pepperonirollz/twoplustwo-go/card"
-
-func generate(deck, current card.CardSet, k, index int, combinations *[]card.CardSet) {
+func generate(deck, current CardSet, k, index int, combinations *[]CardSet) {
 	if current.Length() == k {
-		set := card.EmptyCardSet()
+		set := EmptyCardSet()
 		set.AddCards(current)
 		*combinations = append(*combinations, set)
 
@@ -22,8 +20,8 @@ func generate(deck, current card.CardSet, k, index int, combinations *[]card.Car
 
 // generate C(n,k) combinations of cards from a deck of n cards
 // returns a slice of card.CardSet
-func GenerateCombos(deck card.CardSet, k int) []card.CardSet {
-	var combinations []card.CardSet
-	generate(deck, card.CardSet{}, k, 0, &combinations)
+func GenerateCombos(deck CardSet, k int) []CardSet {
+	var combinations []CardSet
+	generate(deck, CardSet{}, k, 0, &combinations)
 	return combinations
 }

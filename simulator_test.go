@@ -1,10 +1,8 @@
-package equityEval
+package twoplustwogo
 
 import (
 	"math/rand"
 	"testing"
-
-	card "github.com/pepperonirollz/twoplustwo-go/card"
 )
 
 var r *rand.Rand
@@ -14,14 +12,14 @@ func init() {
 }
 
 func TestSimulator(t *testing.T) {
-	players := make([]card.CardSet, r.Intn(10)+2)
-	deck := card.NewDeck()
+	players := make([]CardSet, 3)
+	deck := NewDeck()
 	deck.Shuffle(r)
 	for i := 0; i < len(players); i++ {
-		players[i] = card.FromCards([]card.Card{deck.DealOne(), deck.DealOne()})
+		players[i] = FromCards(deck.Deal(2))
 	}
 
-	board := card.FromCards([]card.Card{deck.DealOne(), deck.DealOne(), deck.DealOne(), deck.DealOne()})
+	board := FromCards(deck.Deal(3))
 
 	equityEval := EquityEvaluator(players, board)
 	equityEval.Print()
@@ -30,16 +28,14 @@ func TestSimulator(t *testing.T) {
 func benchmarkSimulator(numPlayers, numCardsOnBoard int, b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
-		players := make([]card.CardSet, numPlayers)
-		var board card.CardSet
-		deck := card.NewDeck()
+		players := make([]CardSet, numPlayers)
+		var board CardSet
+		deck := NewDeck()
 		deck.Shuffle(r)
 		for i := 0; i < len(players); i++ {
-			players[i] = card.FromCards([]card.Card{deck.DealOne(), deck.DealOne()})
+			players[i] = FromCards(deck.Deal(2))
 		}
-		for i := 0; i < numCardsOnBoard; i++ {
-			board.AddCard(deck.DealOne())
-		}
+		board.AddCards(FromCards(deck.Deal(numCardsOnBoard)))
 		EquityEvaluator(players, board)
 	}
 }
@@ -119,3 +115,11 @@ func BenchmarkSim8b4(b *testing.B) { benchmarkSimulator(8, 4, b) }
 func BenchmarkSim9b0(b *testing.B) { benchmarkSimulator(9, 0, b) }
 func BenchmarkSim9b3(b *testing.B) { benchmarkSimulator(9, 3, b) }
 func BenchmarkSim9b4(b *testing.B) { benchmarkSimulator(9, 4, b) }
+
+// ----------------------------------------------------------------------------------
+//  Hole Cards | Board      |Equity     | TieEquity  | Wins       | Losses     | Ties       |
+// ----------------------------------------------------------------------------------
+//  2♡J♢       | 8♡A♡Q♢     |0.0033     | 0.0554     | 3          | 850        | 50         |
+//  8♢6♡       | 8♡A♡Q♢     |0.1495     | 0.4086     | 135        | 399        | 369        |
+//  8♣J♣       | 8♡A♡Q♢     |0.3832     | 0.4640     | 346        | 138        | 419        |
+// -----------------------------------------------------------------------------------

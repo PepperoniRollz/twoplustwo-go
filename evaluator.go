@@ -1,18 +1,16 @@
-package evaluator
+package twoplustwogo
 
 import (
 	"encoding/binary"
 	"fmt"
 	"os"
-
-	card "github.com/pepperonirollz/twoplustwo-go/card"
 )
 
 type Evaluator struct {
 	HR []int64
 }
 
-func (e *Evaluator) GetHandValue(pCards card.CardSet) HandEvaluation {
+func (e *Evaluator) GetHandValue(pCards CardSet) HandEvaluation {
 	var p int64 = 53
 	size := len(pCards.Cards)
 	if size < 5 {

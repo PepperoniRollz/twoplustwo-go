@@ -1,10 +1,7 @@
-package equityEval
+package twoplustwogo
 
 import (
 	"fmt"
-
-	"github.com/pepperonirollz/twoplustwo-go/card"
-	eval "github.com/pepperonirollz/twoplustwo-go/evaluator"
 )
 
 type EquityEvaluation struct {
@@ -13,13 +10,13 @@ type EquityEvaluation struct {
 	Wins      []int
 	Losses    []int
 	Ties      []int
-	HoleCards []card.CardSet
-	Board     card.CardSet
+	HoleCards []CardSet
+	Board     CardSet
 }
 
-func NewEquityEvaluation(holeCards []card.CardSet, board card.CardSet) EquityEvaluation {
+func NewEquityEvaluation(holeCards []CardSet, board CardSet) EquityEvaluation {
 	size := len(holeCards)
-	hc := make([]card.CardSet, len(holeCards))
+	hc := make([]CardSet, len(holeCards))
 	copy(hc, holeCards)
 	return EquityEvaluation{
 		Equities:  make([]float64, size),
@@ -32,7 +29,7 @@ func NewEquityEvaluation(holeCards []card.CardSet, board card.CardSet) EquityEva
 	}
 }
 
-func (e *EquityEvaluation) EvaluateEquities(handEvals []eval.HandEvaluation) {
+func (e *EquityEvaluation) EvaluateEquities(handEvals []HandEvaluation) {
 	size := len(handEvals)
 	var maxScore int64 = 0
 	tieCount := 0

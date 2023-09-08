@@ -1,3 +1,5 @@
+//go:build ignore
+
 package main
 
 import (
@@ -6,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	gen "github.com/pepperonirollz/twoplustwo-go/generator"
+	tpt "github.com/pepperonirollz/twoplustwo-go"
 )
 
 func main() {
@@ -45,9 +47,9 @@ func main() {
 	for IdNum = 0; IDs[IdNum] != 0 || IdNum == 0; IdNum++ {
 
 		for card = 1; card < 53; card++ {
-			ID = gen.MakeId(IDs[IdNum], card, numCards)
+			ID = tpt.MakeId(IDs[IdNum], card, numCards)
 			if *numCards < 7 {
-				gen.SaveId(ID, IDs, numIds, maxId)
+				tpt.SaveId(ID, IDs, numIds, maxId)
 			}
 			fmt.Printf("\rID - %d", IdNum) // Just to show progress, counting up to 612976.
 
@@ -59,12 +61,12 @@ func main() {
 	for IdNum = 0; IDs[IdNum] != 0 || IdNum == 0; IdNum++ {
 
 		for card = 1; card < 53; card++ {
-			ID = gen.MakeId(IDs[IdNum], card, numCards)
+			ID = tpt.MakeId(IDs[IdNum], card, numCards)
 			if *numCards < 7 {
-				IdSlot = gen.SaveId(ID, IDs, numIds, maxId)*53 + 53
+				IdSlot = tpt.SaveId(ID, IDs, numIds, maxId)*53 + 53
 
 			} else {
-				IdSlot = gen.DoEval(ID)
+				IdSlot = tpt.DoEval(ID)
 			}
 
 			*maxHR = IdNum*53 + card + 53
@@ -72,7 +74,7 @@ func main() {
 			fmt.Printf("\rID - %d", IdNum) // Just to show progress, counting up to 612976.
 		}
 		if *numCards == 6 || *numCards == 7 {
-			HR[IdNum*53+53] = gen.DoEval(IDs[IdNum]) // this puts the above handrank into the array
+			HR[IdNum*53+53] = tpt.DoEval(IDs[IdNum]) // this puts the above handrank into the array
 
 		}
 

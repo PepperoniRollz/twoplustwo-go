@@ -1,4 +1,4 @@
-package card
+package twoplustwogo
 
 type CardSet struct {
 	Cards []Card

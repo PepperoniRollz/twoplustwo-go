@@ -1,4 +1,4 @@
-package card
+package twoplustwogo
 
 import (
 	"math/rand"
@@ -26,10 +26,13 @@ func (d *Deck) Shuffle(r *rand.Rand) {
 	}
 }
 
-func (d *Deck) DealOne() Card {
-	var card Card = d.CurrentState.Get(0)
-	d.CurrentState.Cards = d.CurrentState.Cards[1:]
-	return card
+func (d *Deck) Deal(n int) []Card {
+	cards := make([]Card, n)
+	for i := 0; i < n; i++ {
+		cards[i] = d.CurrentState.Get(i)
+	}
+	d.CurrentState.Cards = d.CurrentState.Cards[n:]
+	return cards
 }
 
 func (d *Deck) RemoveCard(card Card) {

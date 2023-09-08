@@ -1,4 +1,4 @@
-package constants
+package twoplustwogo
 
 func GetCardMap() map[int]string {
 

@@ -1,16 +1,15 @@
-package generator
+package twoplustwogo
 
 import (
 	"fmt"
 	"testing"
 	"time"
 
-	e "github.com/pepperonirollz/twoplustwo-go/evaluator"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerator(t *testing.T) {
-	evaluator := e.NewEvaluator("../HandRanks.dat")
+	evaluator := NewEvaluator("../HandRanks.dat")
 
 	fmt.Println("Initialization complete.")
 

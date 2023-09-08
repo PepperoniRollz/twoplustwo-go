@@ -1,20 +1,14 @@
-package equityEval
+package twoplustwogo
 
-import (
-	card "github.com/pepperonirollz/twoplustwo-go/card"
-	combos "github.com/pepperonirollz/twoplustwo-go/combinations"
-	eval "github.com/pepperonirollz/twoplustwo-go/evaluator"
-)
-
-var evaluator eval.Evaluator
+var evaluator Evaluator
 
 func init() {
-	evaluator = eval.NewEvaluator("../HandRanks.dat")
+	evaluator = NewEvaluator("../HandRanks.dat")
 }
 
 // EquityEvaluator takes a slice of hole cards and a board and returns an EquityEvaluation
-func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) EquityEvaluation {
-	deck := card.NewDeck()
+func EquityEvaluator(holeCards []CardSet, board CardSet) EquityEvaluation {
+	deck := NewDeck()
 	equityEval := NewEquityEvaluation(holeCards, board)
 
 	for i := 0; i < len(holeCards); i++ {
@@ -28,10 +22,10 @@ func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) EquityEvaluat
 	}
 	deckCardSet := deck.CurrentState
 	numCardsInRunout := 5 - board.Length()
-	combinations := combos.GenerateCombos(deckCardSet, numCardsInRunout)
+	combinations := GenerateCombos(deckCardSet, numCardsInRunout)
 
 	for i := 0; i < len(combinations); i++ {
-		handEvals := make([]eval.HandEvaluation, len(holeCards))
+		handEvals := make([]HandEvaluation, len(holeCards))
 
 		for j := 0; j < len(holeCards); j++ {
 			hand := holeCards[j]

@@ -1,10 +1,7 @@
-package evaluator
+package twoplustwogo
 
 import (
 	"fmt"
-
-	d "github.com/pepperonirollz/twoplustwo-go/card"
-	constants "github.com/pepperonirollz/twoplustwo-go/constants"
 )
 
 type HandEvaluation struct {
@@ -14,7 +11,7 @@ type HandEvaluation struct {
 	Value              int64
 }
 
-func newHandEval(p int64, pCards []d.Card) HandEvaluation {
+func newHandEval(p int64, pCards []Card) HandEvaluation {
 
 	return HandEvaluation{
 		HandCategory:       int(p >> 12),
@@ -24,14 +21,14 @@ func newHandEval(p int64, pCards []d.Card) HandEvaluation {
 }
 
 func (h *HandEvaluation) Print() {
-	fmt.Println(h.Hand, constants.GetHandTypes()[h.HandCategory], h.RankWithinCategory, h.Value)
+	fmt.Println(h.Hand, GetHandTypes()[h.HandCategory], h.RankWithinCategory, h.Value)
 
 }
 
-func cardsToString(cards []d.Card) string {
+func cardsToString(cards []Card) string {
 	var s string
 	for i := 0; i < len(cards); i++ {
-		s += constants.GetCardMap()[cards[i].Value] + " "
+		s += GetCardMap()[cards[i].Value] + " "
 	}
 	return s
 }

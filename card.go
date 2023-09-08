@@ -1,8 +1,4 @@
-package card
-
-import (
-	constants "github.com/pepperonirollz/twoplustwo-go/constants"
-)
+package twoplustwogo
 
 type Card struct {
 	Value       int
@@ -15,7 +11,7 @@ func FromCode(v int) Card {
 
 func FromString(s string) Card {
 
-	val, ok := constants.GetCardCode()[s]
+	val, ok := GetCardCode()[s]
 	if ok {
 		return Card{Value: val}
 	} else {
@@ -24,9 +20,9 @@ func FromString(s string) Card {
 }
 
 func (card *Card) Print() {
-	println(constants.GetCardMap()[card.Value])
+	println(GetCardMap()[card.Value])
 }
 
 func (card *Card) ToString() string {
-	return constants.GetCardMap()[card.Value]
+	return GetCardMap()[card.Value]
 }
