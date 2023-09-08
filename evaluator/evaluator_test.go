@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	card "github.com/pepperonirollz/twoplustwo-go/card"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEvaluator(t *testing.T) {
@@ -15,7 +16,7 @@ func TestEvaluator(t *testing.T) {
 
 	result1 := evaluator.GetHandValue(h1)
 	result2 := evaluator.GetHandValue(h2)
-	// assert.Equal(t, -1, evaluator.CompareHands(result1, result2), "correct comparison result") // 2222A < 3333A
+	assert.Greater(t, result1.Value, result2.Value, "h1 should be greater than h2")
 
 	fmt.Println(evaluator.CompareHands(result1, result2))
 	result1.Print()

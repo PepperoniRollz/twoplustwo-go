@@ -1,4 +1,4 @@
-package simulator
+package equityEval
 
 import (
 	"fmt"
@@ -38,20 +38,20 @@ func (e *EquityEvaluation) EvaluateEquities(handEvals []eval.HandEvaluation) {
 	tieCount := 0
 	//get max score
 	for i := 0; i < size; i++ {
-		if handEvals[i].P > maxScore {
-			maxScore = handEvals[i].P
+		if handEvals[i].Value > maxScore {
+			maxScore = handEvals[i].Value
 		}
 	}
 	//see if there are any ties for best hand
 	for i := 0; i < size; i++ {
-		if handEvals[i].P == maxScore {
+		if handEvals[i].Value == maxScore {
 			tieCount++
 		}
 	}
 	//if there are ties, then the best hands will get a tie, all others get losses
 	if tieCount > 1 {
 		for i := 0; i < size; i++ {
-			if handEvals[i].P == maxScore {
+			if handEvals[i].Value == maxScore {
 				e.Ties[i]++
 			} else {
 				e.Losses[i]++
@@ -60,7 +60,7 @@ func (e *EquityEvaluation) EvaluateEquities(handEvals []eval.HandEvaluation) {
 		//if there are no ties, then the best hand gets a win, all others get losses
 	} else {
 		for i := 0; i < size; i++ {
-			if handEvals[i].P == maxScore {
+			if handEvals[i].Value == maxScore {
 				e.Wins[i]++
 			} else {
 				e.Losses[i]++

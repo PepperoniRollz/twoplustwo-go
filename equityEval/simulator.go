@@ -1,4 +1,4 @@
-package simulator
+package equityEval
 
 import (
 	card "github.com/pepperonirollz/twoplustwo-go/card"
@@ -27,7 +27,6 @@ func EquityEvaluator(holeCards []card.CardSet, board card.CardSet) EquityEvaluat
 		}
 	}
 	deckCardSet := deck.CurrentState
-	// equities := make([]float64, len(holeCards))
 	numCardsInRunout := 5 - board.Length()
 	combinations := combos.GenerateCombos(deckCardSet, numCardsInRunout)
 

@@ -11,7 +11,7 @@ type HandEvaluation struct {
 	HandCategory       int
 	RankWithinCategory int
 	Hand               string
-	P                  int64
+	Value              int64
 }
 
 func newHandEval(p int64, pCards []d.Card) HandEvaluation {
@@ -19,12 +19,12 @@ func newHandEval(p int64, pCards []d.Card) HandEvaluation {
 	return HandEvaluation{
 		HandCategory:       int(p >> 12),
 		RankWithinCategory: int(p & 0x00000FFF),
-		P:                  p,
+		Value:              p,
 	}
 }
 
 func (h *HandEvaluation) Print() {
-	fmt.Println(h.Hand, constants.GetHandTypes()[h.HandCategory], h.RankWithinCategory, h.P)
+	fmt.Println(h.Hand, constants.GetHandTypes()[h.HandCategory], h.RankWithinCategory, h.Value)
 
 }
 
