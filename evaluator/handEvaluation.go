@@ -19,7 +19,6 @@ func newHandEval(p int64, pCards []d.Card) HandEvaluation {
 	return HandEvaluation{
 		HandCategory:       int(p >> 12),
 		RankWithinCategory: int(p & 0x00000FFF),
-		Hand:               cardsToString(pCards),
 		P:                  p,
 	}
 }
