@@ -9,7 +9,7 @@ import (
 )
 
 func TestGenerator(t *testing.T) {
-	evaluator := NewEvaluator("../HandRanks.dat")
+	evaluator := NewEvaluator("./HandRanks.dat")
 
 	fmt.Println("Initialization complete.")
 

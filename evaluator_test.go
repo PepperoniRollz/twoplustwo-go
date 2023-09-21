@@ -8,7 +8,7 @@ import (
 )
 
 func TestEvaluator(t *testing.T) {
-	evaluator := NewEvaluator("../HandRanks.dat")
+	evaluator := NewEvaluator("./HandRanks.dat")
 	fmt.Println("Initialization complete.")
 	h1 := NewHand("TsJsQsKsAs")
 	h2 := NewHand("9sTsJsQsKs")

@@ -3,7 +3,7 @@ package twoplustwogo
 var evaluator Evaluator
 
 func init() {
-	evaluator = NewEvaluator("../HandRanks.dat")
+	evaluator = NewEvaluator("./HandRanks.dat")
 }
 
 // EquityEvaluator takes a slice of hole cards and a board and returns an EquityEvaluation
