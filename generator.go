@@ -93,6 +93,7 @@ func SaveId(ID int64, IDs []int64, numIds *int, maxId *int64) int {
 	if ID == 0 {
 		return 0
 	}
+
 	if ID >= *maxId {
 		if ID > *maxId {
 			IDs[*numIds] = ID
@@ -101,11 +102,8 @@ func SaveId(ID int64, IDs []int64, numIds *int, maxId *int64) int {
 		}
 		return *numIds - 1
 	}
-
-	var low int = 0
-	var high int = *numIds - 1
+	var low, high, holdtest int = 0, *numIds - 1, 0
 	var testval int64
-	var holdtest int
 
 	for high-low > 1 {
 		holdtest = (high + low + 1) / 2
