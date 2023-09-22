@@ -4,17 +4,17 @@ type CardSet struct {
 	Cards []Card
 }
 
-func (cs *CardSet) FromString(s string) {
+func (cs *CardSet) NewCardSet(s string) {
 	for i := 0; i < len(s); i += 2 {
-		cs.Cards = append(cs.Cards, FromString(s[i:i+2]))
+		cs.Cards = append(cs.Cards, NewCard(s[i:i+2]))
 	}
 }
 
 func EmptyCardSet() CardSet {
 	return CardSet{Cards: make([]Card, 0)}
 }
-func NewCardSet(n int) CardSet {
-	return CardSet{Cards: make([]Card, n)}
+func NewCardSet() CardSet {
+	return CardSet{Cards: make([]Card, 0)}
 }
 
 func (cs *CardSet) Print() {
@@ -54,19 +54,19 @@ func NewHandFromCodes(codes []int) CardSet {
 	return hand
 }
 
-func FromCards(cards []Card) CardSet {
-	var cardSet CardSet
-	cardSet.Cards = cards
-	return cardSet
-}
+//	func FromCards(cards []Card) CardSet {
+//		var cardSet CardSet
+//		cardSet.Cards = cards
+//		return cardSet
+//	}
 func NewHand(cardString string) CardSet {
 	var hand CardSet
-	hand.FromString(cardString)
+	hand.NewCardSet(cardString)
 	return hand
 }
 func NewBoard(cardString string) CardSet {
 	var hand CardSet
-	hand.FromString(cardString)
+	hand.NewCardSet(cardString)
 	return hand
 }
 
@@ -76,4 +76,13 @@ func (cs *CardSet) ToString() string {
 		s += cs.Cards[i].ToString()
 	}
 	return s
+}
+
+func (cs *CardSet) RemoveCard(card Card) {
+	for i := 0; i < cs.Length(); i++ {
+		if cs.Get(i) == card {
+			cs.Cards = append(cs.Cards[:i], cs.Cards[i+1:]...)
+			return
+		}
+	}
 }
