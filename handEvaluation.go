@@ -11,8 +11,7 @@ type HandEvaluation struct {
 	Value              int64
 }
 
-func newHandEval(p int64, pCards []Card) HandEvaluation {
-
+func newHandEval(p int64, pCards CardSet) HandEvaluation {
 	return HandEvaluation{
 		HandCategory:       int(p >> 12),
 		RankWithinCategory: int(p & 0x00000FFF),
@@ -22,13 +21,17 @@ func newHandEval(p int64, pCards []Card) HandEvaluation {
 
 func (h *HandEvaluation) Print() {
 	fmt.Println(h.Hand, GetHandTypes()[h.HandCategory], h.RankWithinCategory, h.Value)
-
 }
 
-func cardsToString(cards []Card) string {
-	var s string
-	for i := 0; i < len(cards); i++ {
-		s += GetCardMap()[cards[i].Value] + " "
+func Best5(cards CardSet) CardSet {
+	var best CardSet
+	var bestHandEval int64 = -1
+	combos := GenerateCombos(cards, 5)
+	for i := 0; i < len(combos); i++ {
+		handValue := evaluator.GetHandValue(combos[i])
+		if handValue.Value > bestHandEval {
+			best = combos[i]
+		}
 	}
-	return s
+	return best
 }
