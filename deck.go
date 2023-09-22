@@ -11,9 +11,9 @@ type Deck struct {
 
 func NewDeck() Deck {
 	var deck Deck
-	deck.InitState = NewCardSet(52)
+	deck.InitState = NewCardSet()
 	for i := 1; i < 53; i++ {
-		deck.InitState.Set(i-1, FromCode(i))
+		deck.InitState.AddCard(FromCode(i))
 	}
 	deck.CurrentState = deck.InitState
 	return deck
@@ -26,10 +26,10 @@ func (d *Deck) Shuffle(r *rand.Rand) {
 	}
 }
 
-func (d *Deck) Deal(n int) []Card {
-	cards := make([]Card, n)
+func (d *Deck) Deal(n int) CardSet {
+	cards := NewCardSet()
 	for i := 0; i < n; i++ {
-		cards[i] = d.CurrentState.Get(i)
+		cards.AddCard(d.CurrentState.Get(i))
 	}
 	d.CurrentState.Cards = d.CurrentState.Cards[n:]
 	return cards
