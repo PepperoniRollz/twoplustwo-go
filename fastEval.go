@@ -1,7 +1,5 @@
 package twoplustwogo
 
-var flushCount int = 0
-
 func eval5HandFast(c1, c2, c3, c4, c5 int) int {
 	q := (c1 | c2 | c3 | c4 | c5) >> 16
 	var s int16
