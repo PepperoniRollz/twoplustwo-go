@@ -1,31 +1,29 @@
 package twoplustwogo
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 )
 
 var r *rand.Rand
 
-func init() {
-	r = rand.New(rand.NewSource(42))
-}
-
 func TestSimulator(t *testing.T) {
+	r := rand.New(rand.NewSource(42))
+
 	players := make([]CardSet, 3)
 	deck := NewDeck()
 	deck.Shuffle(r)
 	for i := 0; i < len(players); i++ {
-		players[i] = FromCards(deck.Deal(2))
+		players[i].AddCards(deck.Deal(2))
 	}
-
-	board := FromCards(deck.Deal(3))
-
+	board := deck.Deal(3)
+	fmt.Println("Board:", board)
 	equityEval := EquityEvaluator(players, board)
 	equityEval.Print()
 }
 
-func benchmarkSimulator(numPlayers, numCardsOnBoard int, b *testing.B) {
+func benchmarkEquity(numPlayers, numCardsOnBoard int, b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		players := make([]CardSet, numPlayers)
@@ -33,9 +31,9 @@ func benchmarkSimulator(numPlayers, numCardsOnBoard int, b *testing.B) {
 		deck := NewDeck()
 		deck.Shuffle(r)
 		for i := 0; i < len(players); i++ {
-			players[i] = FromCards(deck.Deal(2))
+			players[i].AddCards(deck.Deal(2))
 		}
-		board.AddCards(FromCards(deck.Deal(numCardsOnBoard)))
+		board.AddCards(deck.Deal(numCardsOnBoard))
 		EquityEvaluator(players, board)
 	}
 }
@@ -70,51 +68,52 @@ func benchmarkSimulator(numPlayers, numCardsOnBoard int, b *testing.B) {
 // BenchmarkSim9b0-8             33         164578612 ns/op
 // BenchmarkSim9b3-8          21414            279930 ns/op
 // BenchmarkSim9b4-8         240248             24841 ns/op
-func BenchmarkSim2b0(b *testing.B) { benchmarkSimulator(2, 0, b) }
-func BenchmarkSim2b3(b *testing.B) { benchmarkSimulator(2, 3, b) }
-func BenchmarkSim2b4(b *testing.B) { benchmarkSimulator(2, 4, b) }
+
+func BenchmarkEquity2Players0Board(b *testing.B) { benchmarkEquity(2, 0, b) }
+func BenchMarkEquity2Players3Board(b *testing.B) { benchmarkEquity(2, 3, b) }
+func BenchmarkEquity2Players4Board(b *testing.B) { benchmarkEquity(2, 4, b) }
 
 /////
 
-func BenchmarkSim3b0(b *testing.B) { benchmarkSimulator(3, 0, b) }
-func BenchmarkSim3b3(b *testing.B) { benchmarkSimulator(3, 3, b) }
-func BenchmarkSim3b4(b *testing.B) { benchmarkSimulator(3, 4, b) }
+func BenchmarkEquity3Players0Board(b *testing.B) { benchmarkEquity(3, 0, b) }
+func BenchmarkEquity3Players3Board(b *testing.B) { benchmarkEquity(3, 3, b) }
+func BenchmarkEquity3Players4Board(b *testing.B) { benchmarkEquity(3, 4, b) }
 
 /////
 
-func BenchmarkSim4b0(b *testing.B) { benchmarkSimulator(4, 0, b) }
-func BenchmarkSim4b3(b *testing.B) { benchmarkSimulator(4, 3, b) }
-func BenchmarkSim4b4(b *testing.B) { benchmarkSimulator(4, 4, b) }
+func BenchmarkEquity4Players0Board(b *testing.B) { benchmarkEquity(4, 0, b) }
+func BenchmarkEquity4Players3Board(b *testing.B) { benchmarkEquity(4, 3, b) }
+func BenchmarkEquity4Players4Board(b *testing.B) { benchmarkEquity(4, 4, b) }
 
 /////
 
-func BenchmarkSim5b0(b *testing.B) { benchmarkSimulator(5, 0, b) }
-func BenchmarkSim5b3(b *testing.B) { benchmarkSimulator(5, 3, b) }
-func BenchmarkSim5b4(b *testing.B) { benchmarkSimulator(5, 4, b) }
+func BenchmarkEquity5Players0Board(b *testing.B) { benchmarkEquity(5, 0, b) }
+func BenchMarkEquity5Players3Board(b *testing.B) { benchmarkEquity(5, 3, b) }
+func BenchmarkEquity5Players4Board(b *testing.B) { benchmarkEquity(5, 4, b) }
 
 /////
 
-func BenchmarkSim6b0(b *testing.B) { benchmarkSimulator(6, 0, b) }
-func BenchmarkSim6b3(b *testing.B) { benchmarkSimulator(6, 3, b) }
-func BenchmarkSim6b4(b *testing.B) { benchmarkSimulator(6, 4, b) }
+func BenchmarkEquity6Players0Board(b *testing.B) { benchmarkEquity(6, 0, b) }
+func BenchMarkEquity6Players3Board(b *testing.B) { benchmarkEquity(6, 3, b) }
+func BenchmarkEquity6Players4Board(b *testing.B) { benchmarkEquity(6, 4, b) }
 
 /////
 
-func BenchmarkSim7b0(b *testing.B) { benchmarkSimulator(7, 0, b) }
-func BenchmarkSim7b3(b *testing.B) { benchmarkSimulator(7, 3, b) }
-func BenchmarkSim7b4(b *testing.B) { benchmarkSimulator(7, 4, b) }
+func BenchmarkEquity7Players0Board(b *testing.B) { benchmarkEquity(7, 0, b) }
+func BenchMarkEquity7Players3Board(b *testing.B) { benchmarkEquity(7, 3, b) }
+func BenchmarkEquity7Players4Board(b *testing.B) { benchmarkEquity(7, 4, b) }
 
 /////
 
-func BenchmarkSim8b0(b *testing.B) { benchmarkSimulator(8, 0, b) }
-func BenchmarkSim8b3(b *testing.B) { benchmarkSimulator(8, 3, b) }
-func BenchmarkSim8b4(b *testing.B) { benchmarkSimulator(8, 4, b) }
+func BenchmarkEquity8Players0Board(b *testing.B) { benchmarkEquity(8, 0, b) }
+func BenchMarkEquity8Players3Board(b *testing.B) { benchmarkEquity(8, 3, b) }
+func BenchmarkEquity8Players4Board(b *testing.B) { benchmarkEquity(8, 4, b) }
 
 /////
 
-func BenchmarkSim9b0(b *testing.B) { benchmarkSimulator(9, 0, b) }
-func BenchmarkSim9b3(b *testing.B) { benchmarkSimulator(9, 3, b) }
-func BenchmarkSim9b4(b *testing.B) { benchmarkSimulator(9, 4, b) }
+func BenchmarkEquity9Players0Board(b *testing.B) { benchmarkEquity(9, 0, b) }
+func BenchMarkEquity9Players3Board(b *testing.B) { benchmarkEquity(9, 3, b) }
+func BenchmarkEquity9Players4Board(b *testing.B) { benchmarkEquity(9, 4, b) }
 
 // ----------------------------------------------------------------------------------
 //  Hole Cards | Board      |Equity     | TieEquity  | Wins       | Losses     | Ties       |

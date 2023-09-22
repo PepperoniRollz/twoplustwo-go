@@ -1,15 +1,20 @@
 package twoplustwogo
 
+import "fmt"
+
 type Card struct {
-	Value       int
-	ValueString string
+	Value int
 }
 
 func FromCode(v int) Card {
 	return Card{Value: v}
 }
 
-func FromString(s string) Card {
+func NewCard(s string) Card {
+	return parseString(s)
+}
+
+func parseString(s string) Card {
 
 	val, ok := GetCardCode()[s]
 	if ok {
@@ -20,7 +25,7 @@ func FromString(s string) Card {
 }
 
 func (card *Card) Print() {
-	println(GetCardMap()[card.Value])
+	fmt.Print(GetCardMap()[card.Value])
 }
 
 func (card *Card) ToString() string {

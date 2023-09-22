@@ -27,7 +27,7 @@ func (e *Evaluator) GetHandValue(pCards CardSet) HandEvaluation {
 		p = e.HR[p]
 	}
 
-	return newHandEval(p, pCards.Cards)
+	return newHandEval(p, pCards)
 }
 
 func (e *Evaluator) CompareHands(hand1 HandEvaluation, hand2 HandEvaluation) int {
