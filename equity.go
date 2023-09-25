@@ -30,7 +30,7 @@ func EquityEvaluator(holeCards []CardSet, board CardSet) EquityEvaluation {
 		for j := 0; j < len(holeCards); j++ {
 			hand := holeCards[j]
 			hand.AddCards(combinations[i])
-			handEvals[j] = evaluator.GetHandValue(hand)
+			handEvals[j] = evaluator.Evaluate(hand)
 		}
 		equityEval.EvaluateEquities(handEvals)
 	}

@@ -10,7 +10,7 @@ type Evaluator struct {
 	HR []int64
 }
 
-func (e *Evaluator) GetHandValue(pCards CardSet) HandEvaluation {
+func (e *Evaluator) Evaluate(pCards CardSet) HandEvaluation {
 	var p int64 = 53
 	size := len(pCards.Cards)
 	if size < 5 {
@@ -56,4 +56,22 @@ func NewEvaluator(pathToHandRanks string) Evaluator {
 
 	return Evaluator{HR: HR}
 
+}
+
+func Best5(cards CardSet) CardSet {
+	var best CardSet
+	var bestHandEval int64 = -1
+	combos := GenerateCombos(cards, 5)
+	for i := 0; i < len(combos); i++ {
+		handValue := evaluator.Evaluate(combos[i])
+		if handValue.Value > bestHandEval {
+			best = combos[i]
+		}
+	}
+	return best
+}
+
+func (e *Evaluator) Evaluate5(cards CardSet) HandEvaluation {
+	fiveBest := Best5(cards)
+	return e.Evaluate(fiveBest)
 }

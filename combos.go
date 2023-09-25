@@ -2,7 +2,7 @@ package twoplustwogo
 
 func generate(deck, current CardSet, k, index int, combinations *[]CardSet) {
 	if current.Length() == k {
-		set := EmptyCardSet()
+		var set CardSet
 		set.AddCards(current)
 		*combinations = append(*combinations, set)
 

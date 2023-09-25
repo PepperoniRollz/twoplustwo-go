@@ -4,6 +4,7 @@ import (
 	"math/rand"
 )
 
+// deck is primarily a wrapper around  cardset.  Also stores initial and current states for monte carlo sims
 type Deck struct {
 	InitState    CardSet
 	CurrentState CardSet
@@ -11,7 +12,6 @@ type Deck struct {
 
 func NewDeck() Deck {
 	var deck Deck
-	deck.InitState = NewCardSet()
 	for i := 1; i < 53; i++ {
 		deck.InitState.AddCard(FromCode(i))
 	}
@@ -27,7 +27,7 @@ func (d *Deck) Shuffle(r *rand.Rand) {
 }
 
 func (d *Deck) Deal(n int) CardSet {
-	cards := NewCardSet()
+	var cards CardSet
 	for i := 0; i < n; i++ {
 		cards.AddCard(d.CurrentState.Get(i))
 	}

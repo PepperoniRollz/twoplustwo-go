@@ -51,26 +51,30 @@ func TestEvaluator(t *testing.T) {
 	fmt.Println("Initialization complete.")
 	h1 := gopoker6[0]
 	h2 := gopoker6[1]
+	h3 := gopoker7[6]
+	h4 := gopoker6[7]
 
-	result1 := evaluator.GetHandValue(h1)
-	result2 := evaluator.GetHandValue(h2)
+	result1 := evaluator.Evaluate(h1)
+	result2 := evaluator.Evaluate(h2)
+	result3 := evaluator.Evaluate(h3)
+	result4 := evaluator.Evaluate(h4)
+	result5 := evaluator.Evaluate5(h3)
+	result6 := evaluator.Evaluate5(h4)
+
 	assert.Less(t, result1.Value, result2.Value, "h1 should be worse than h2")
+	assert.Less(t, result3.Value, result4.Value, "h3 should be worse than h4")
 
-	fmt.Println(evaluator.CompareHands(result1, result2))
-	result1.Print()
-	result2.Print()
-	a := Best5(h1)
-	b := Best5(h2)
-	a.Print()
-	fmt.Println("----")
-	b.Print()
+	result3.Print()
+	result4.Print()
+	result5.Print()
+	result6.Print()
 
 }
 
 func benchmarkEvaluate5(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for _, hand := range gopoker5 {
-			evaluator.GetHandValue(hand)
+			evaluator.Evaluate(hand)
 		}
 	}
 }
@@ -78,7 +82,7 @@ func benchmarkEvaluate5(b *testing.B) {
 func benchmarkEvaluate6(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for _, hand := range gopoker6 {
-			evaluator.GetHandValue(hand)
+			evaluator.Evaluate(hand)
 		}
 	}
 }
@@ -86,7 +90,7 @@ func benchmarkEvaluate6(b *testing.B) {
 func benchmarkEvaluate7(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for _, hand := range gopoker7 {
-			evaluator.GetHandValue(hand)
+			evaluator.Evaluate(hand)
 		}
 	}
 }
@@ -100,8 +104,8 @@ func benchmarkAll5CardHands(b *testing.B) {
 	//compares all the hands against each other
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < len(hands1); i++ {
-			hand1eval := evaluator.GetHandValue(hands1[i])
-			hand2eval := evaluator.GetHandValue(hands2[i])
+			hand1eval := evaluator.Evaluate(hands1[i])
+			hand2eval := evaluator.Evaluate(hands2[i])
 			evaluator.CompareHands(hand1eval, hand2eval)
 		}
 	}
@@ -117,8 +121,8 @@ func benchmarkAll6CardHands(b *testing.B) {
 	//compares all the hands against each other
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < len(hands1); i++ {
-			hand1eval := evaluator.GetHandValue(hands1[i])
-			hand2eval := evaluator.GetHandValue(hands2[i])
+			hand1eval := evaluator.Evaluate(hands1[i])
+			hand2eval := evaluator.Evaluate(hands2[i])
 			evaluator.CompareHands(hand1eval, hand2eval)
 		}
 	}
@@ -135,8 +139,8 @@ func benchmarkAll7CardHands(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < len(hands1); i++ {
-			hand1eval := evaluator.GetHandValue(hands1[i])
-			hand2eval := evaluator.GetHandValue(hands2[i])
+			hand1eval := evaluator.Evaluate(hands1[i])
+			hand2eval := evaluator.Evaluate(hands2[i])
 			evaluator.CompareHands(hand1eval, hand2eval)
 		}
 	}
