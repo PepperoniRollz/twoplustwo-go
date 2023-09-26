@@ -10,7 +10,7 @@ type Evaluator struct {
 	HR []int64
 }
 
-func (e *Evaluator) Evaluate(pCards CardSet) HandEvaluation {
+func Evaluate(pCards CardSet) HandEvaluation {
 	var p int64 = 53
 	size := len(pCards.Cards)
 	if size < 5 {
@@ -20,17 +20,17 @@ func (e *Evaluator) Evaluate(pCards CardSet) HandEvaluation {
 		panic("Too many cards to evaluate hand.")
 	}
 	for i := 0; i < size; i++ {
-		p = e.HR[p+int64(pCards.Cards[i].Value)]
+		p = evaluator.HR[p+int64(pCards.Cards[i].Value)]
 	}
 
 	if size == 5 || size == 6 {
-		p = e.HR[p]
+		p = evaluator.HR[p]
 	}
 
 	return newHandEval(p, pCards)
 }
 
-func (e *Evaluator) CompareHands(hand1 HandEvaluation, hand2 HandEvaluation) int {
+func CompareHands(hand1 HandEvaluation, hand2 HandEvaluation) int {
 
 	if hand1.Value > hand2.Value {
 		return 1
@@ -63,7 +63,7 @@ func Best5(cards CardSet) CardSet {
 	var bestHandEval int64 = -1
 	combos := GenerateCombos(cards, 5)
 	for i := 0; i < len(combos); i++ {
-		handValue := evaluator.Evaluate(combos[i])
+		handValue := Evaluate(combos[i])
 		if handValue.Value > bestHandEval {
 			best = combos[i]
 		}
@@ -71,7 +71,7 @@ func Best5(cards CardSet) CardSet {
 	return best
 }
 
-func (e *Evaluator) Evaluate5(cards CardSet) HandEvaluation {
+func Evaluate5(cards CardSet) HandEvaluation {
 	fiveBest := Best5(cards)
-	return e.Evaluate(fiveBest)
+	return Evaluate(fiveBest)
 }
