@@ -7,7 +7,7 @@ func init() {
 }
 
 // EquityEvaluator takes a slice of hole cards and a board and returns an EquityEvaluation
-func EquityEvaluator(holeCards []CardSet, board CardSet) EquityEvaluation {
+func EvaluateEquity(holeCards []CardSet, board CardSet) EquityEvaluation {
 	deck := NewDeck()
 	equityEval := NewEquityEvaluation(holeCards, board)
 

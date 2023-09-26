@@ -19,7 +19,7 @@ func TestSimulator(t *testing.T) {
 	}
 	board := deck.Deal(3)
 	fmt.Println("Board:", board)
-	equityEval := EquityEvaluator(players, board)
+	equityEval := EvaluateEquity(players, board)
 	equityEval.Print()
 }
 
@@ -34,7 +34,7 @@ func benchmarkEquity(numPlayers, numCardsOnBoard int, b *testing.B) {
 			players[i].AddCards(deck.Deal(2))
 		}
 		board.AddCards(deck.Deal(numCardsOnBoard))
-		EquityEvaluator(players, board)
+		EvaluateEquity(players, board)
 	}
 }
 
