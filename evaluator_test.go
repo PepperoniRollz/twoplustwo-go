@@ -1,7 +1,6 @@
 package twoplustwogo
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -47,7 +46,6 @@ var deck = NewDeck()
 var hands []CardSet = GenerateCombos(deck.CurrentState, 5)
 
 func TestEvaluator(t *testing.T) {
-	fmt.Println("Initialization complete.")
 	h1 := gopoker6[0]
 	h2 := gopoker6[1]
 	h3 := gopoker7[6]

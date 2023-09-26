@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+func init() {
+	evaluator = NewEvaluator("./HandRanks.dat")
+}
+
 type Evaluator struct {
 	HR []int64
 }
