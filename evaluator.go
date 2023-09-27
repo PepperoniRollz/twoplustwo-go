@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+var evaluator Evaluator
+
 func init() {
 	evaluator = NewEvaluator("./HandRanks.dat")
 }

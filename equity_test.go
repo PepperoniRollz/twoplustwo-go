@@ -17,8 +17,8 @@ func TestSimulator(t *testing.T) {
 	for i := 0; i < len(players); i++ {
 		players[i].AddCards(deck.Deal(2))
 	}
-	board := deck.Deal(3)
-	fmt.Println("Board:", board)
+	var board CardSet
+	fmt.Println(players, board)
 	equityEval := EvaluateEquity(players, board)
 	equityEval.Print()
 }

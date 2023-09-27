@@ -66,6 +66,11 @@ func TestEvaluator(t *testing.T) {
 	result5.Print()
 	result6.Print()
 
+	var hand CardSet
+	hand.NewCardSet("AsKsQsJsTs")
+	eval := Evaluate(hand)
+	eval.Print()
+
 }
 
 func benchmarkEvaluate5(b *testing.B) {
