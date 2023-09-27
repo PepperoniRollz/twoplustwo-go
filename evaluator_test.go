@@ -76,7 +76,7 @@ func TestEvaluator(t *testing.T) {
 func benchmarkEvaluate5(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for _, hand := range gopoker5 {
-			Evaluate(hand)
+			Evaluate5(hand)
 		}
 	}
 }
@@ -84,7 +84,7 @@ func benchmarkEvaluate5(b *testing.B) {
 func benchmarkEvaluate6(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for _, hand := range gopoker6 {
-			Evaluate(hand)
+			Evaluate5(hand)
 		}
 	}
 }
@@ -92,7 +92,7 @@ func benchmarkEvaluate6(b *testing.B) {
 func benchmarkEvaluate7(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for _, hand := range gopoker7 {
-			Evaluate(hand)
+			Evaluate5(hand)
 		}
 	}
 }
