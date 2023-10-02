@@ -56,6 +56,8 @@ func NewEvaluator(pathToHandRanks string) Evaluator {
 	file, err := os.Open(pathToHandRanks)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
+		Generate()
+		NewEvaluator(pathToHandRanks)
 	}
 	defer file.Close()
 
