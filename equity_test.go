@@ -6,8 +6,6 @@ import (
 	"testing"
 )
 
-var r *rand.Rand
-
 func TestSimulator(t *testing.T) {
 	r := rand.New(rand.NewSource(42))
 
@@ -24,6 +22,7 @@ func TestSimulator(t *testing.T) {
 }
 
 func benchmarkEquity(numPlayers, numCardsOnBoard int, b *testing.B) {
+	r := rand.New(rand.NewSource(42))
 
 	for n := 0; n < b.N; n++ {
 		players := make([]CardSet, numPlayers)

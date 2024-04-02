@@ -15,6 +15,7 @@ func init() {
 		panic(err)
 	}
 	evaluator = NewEvaluator(filepath.Join(wd, "HandRanks.dat"))
+	fmt.Println(filepath.Join(wd, "HandRanks.dat"))
 }
 
 type Evaluator struct {
