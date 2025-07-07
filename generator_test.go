@@ -12,7 +12,17 @@ func TestGenerator(t *testing.T) {
 
 	fmt.Println("Initialization complete.")
 
+	evaluator := getDefaultEvaluator()
+	
+	// Time the full enumeration for performance comparison
+	fmt.Println("Starting full enumeration timing test...")
+	startTime := time.Now()
 	handTypeSum := EnumerateAll7CardHands(evaluator.HR)
+	enumerationTime := time.Since(startTime)
+	
+	fmt.Printf("Full enumeration completed in: %v\n", enumerationTime)
+	handsPerSecond := float64(133784560) / enumerationTime.Seconds()
+	fmt.Printf("Enumeration rate: %.0f hands/second\n", handsPerSecond)
 
 	assert.Equal(t, 133784560, handTypeSum[1]+handTypeSum[2]+handTypeSum[3]+handTypeSum[4]+handTypeSum[5]+handTypeSum[6]+handTypeSum[7]+handTypeSum[8]+handTypeSum[9], "correct total number of 7 card hands")
 	assert.Equal(t, 0, handTypeSum[0], "correct number of invalid hands")

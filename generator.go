@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"runtime"
+	"sync"
 	"time"
 )
 
@@ -92,7 +94,6 @@ func MakeId(IDin int64, newcard int, numCards *int) int64 {
 	return ID
 }
 func SaveId(ID int64, IDs []int64, numIds *int, maxId *int64) int {
-
 	if ID == 0 {
 		return 0
 	}
@@ -213,7 +214,22 @@ func DoEval(IDin int64) int {
 	return handrank
 }
 
+// GeneratorConfig holds configuration for the generator
+type GeneratorConfig struct {
+	Verbose            bool
+	OnProgress         func(stage string, percent float64)
+	ParallelGeneration bool
+}
+
+// Generate generates the HandRanks.dat file in the current directory
 func Generate() {
+	GenerateToFile("HandRanks.dat", GeneratorConfig{Verbose: true})
+}
+
+// GenerateToFile generates the HandRanks.dat file to the specified path
+func GenerateToFile(filePath string, config GeneratorConfig) error {
+	startTime := time.Now() // Start timing the entire generation process
+	
 	var IdSlot, card, count int = 0, 0, 0
 	var ID int64
 
@@ -244,66 +260,153 @@ func Generate() {
 	var maxId *int64 = new(int64)
 	var numCards *int = new(int)
 
-	fmt.Println("...Starting...Getting Cards!")
+	if config.Verbose {
+		fmt.Println("...Starting...Getting Cards!")
+	}
+	if config.OnProgress != nil {
+		config.OnProgress("Getting Cards", 0.0)
+	}
 
 	for IdNum = 0; IDs[IdNum] != 0 || IdNum == 0; IdNum++ {
-
 		for card = 1; card < 53; card++ {
 			ID = MakeId(IDs[IdNum], card, numCards)
 			if *numCards < 7 {
 				SaveId(ID, IDs, numIds, maxId)
 			}
-			fmt.Printf("\rID - %d", IdNum) // Just to show progress, counting up to 612976.
-
+			// Progress updates every 1000 iterations for better UX
+			if IdNum%1000 == 0 {
+				progress := float64(IdNum) / 612977.0 * 50.0 // First phase is 50% of total
+				if config.Verbose {
+					fmt.Printf("\rGetting Cards: ID %d / 612977 (%.1f%%)", IdNum, progress)
+				}
+				if config.OnProgress != nil {
+					config.OnProgress("Getting Cards", progress)
+				}
+			}
 		}
 	}
 
-	fmt.Printf("\nSetting Handranks!\n")
+	if config.Verbose {
+		fmt.Printf("\nSetting Handranks!\n")
+	}
+	if config.OnProgress != nil {
+		config.OnProgress("Setting Handranks", 50.0)
+	}
 
 	for IdNum = 0; IDs[IdNum] != 0 || IdNum == 0; IdNum++ {
-
 		for card = 1; card < 53; card++ {
 			ID = MakeId(IDs[IdNum], card, numCards)
 			if *numCards < 7 {
 				IdSlot = SaveId(ID, IDs, numIds, maxId)*53 + 53
-
 			} else {
 				IdSlot = DoEval(ID)
 			}
 
 			*maxHR = IdNum*53 + card + 53
 			HR[*maxHR] = IdSlot
-			fmt.Printf("\rID - %d", IdNum) // Just to show progress, counting up to 612976.
+			// Progress updates every 1000 iterations for better UX
+			if IdNum%1000 == 0 {
+				progress := 50.0 + (float64(IdNum) / 612977.0 * 30.0) // Second phase is 30% of total
+				if config.Verbose {
+					fmt.Printf("\rSetting Handranks: ID %d / 612977 (%.1f%%)", IdNum, progress)
+				}
+				if config.OnProgress != nil {
+					config.OnProgress("Setting Handranks", progress)
+				}
+			}
 		}
 		if *numCards == 6 || *numCards == 7 {
-			HR[IdNum*53+53] = DoEval(IDs[IdNum]) // this puts the above handrank into the array
-
+			HR[IdNum*53+53] = DoEval(IDs[IdNum])
 		}
-
 	}
 
-	fmt.Printf("\nNumber IDs = %d\nmaxHR = %d\n", *numIds, *maxHR)
+	if config.Verbose {
+		fmt.Printf("\nNumber IDs = %d\nmaxHR = %d\n", *numIds, *maxHR)
+	}
+	if config.OnProgress != nil {
+		config.OnProgress("Validation", 80.0)
+	}
 
-	var c0, c1, c2, c3, c4, c5, c6 int
-	var u0, u1, u2, u3, u4, u5 int
+	validationStart := time.Now() // Start timing just the validation phase
 
-	timings := time.Now() // Start a timer
+	if config.ParallelGeneration {
+		// Parallel validation using goroutines
+		numWorkers := runtime.NumCPU()
+		var wg sync.WaitGroup
+		parallelHandSumType := make([][]int, numWorkers)
+		parallelCount := make([]int, numWorkers)
 
-	for c0 = 1; c0 < 53; c0++ {
-		u0 = HR[53+c0]
-		for c1 = c0 + 1; c1 < 53; c1++ {
-			u1 = HR[u0+c1]
-			for c2 = c1 + 1; c2 < 53; c2++ {
-				u2 = HR[u1+c2]
-				for c3 = c2 + 1; c3 < 53; c3++ {
-					u3 = HR[u2+c3]
-					for c4 = c3 + 1; c4 < 53; c4++ {
-						u4 = HR[u3+c4]
-						for c5 = c4 + 1; c5 < 53; c5++ {
-							u5 = HR[u4+c5]
-							for c6 = c5 + 1; c6 < 53; c6++ {
-								handSumType[HR[u5+c6]>>12]++
-								count++
+		for i := 0; i < numWorkers; i++ {
+			parallelHandSumType[i] = make([]int, 10)
+		}
+
+		// Distribute work among workers by card ranges
+		cardsPerWorker := 52 / numWorkers
+		for worker := 0; worker < numWorkers; worker++ {
+			wg.Add(1)
+			go func(workerID int) {
+				defer wg.Done()
+				startCard := workerID*cardsPerWorker + 1
+				endCard := startCard + cardsPerWorker
+				if workerID == numWorkers-1 {
+					endCard = 53 // Last worker takes remaining cards
+				}
+
+				for c0 := startCard; c0 < endCard; c0++ {
+					u0 := HR[53+c0]
+					for c1 := c0 + 1; c1 < 53; c1++ {
+						u1 := HR[u0+c1]
+						for c2 := c1 + 1; c2 < 53; c2++ {
+							u2 := HR[u1+c2]
+							for c3 := c2 + 1; c3 < 53; c3++ {
+								u3 := HR[u2+c3]
+								for c4 := c3 + 1; c4 < 53; c4++ {
+									u4 := HR[u3+c4]
+									for c5 := c4 + 1; c5 < 53; c5++ {
+										u5 := HR[u4+c5]
+										for c6 := c5 + 1; c6 < 53; c6++ {
+											parallelHandSumType[workerID][HR[u5+c6]>>12]++
+											parallelCount[workerID]++
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}(worker)
+		}
+
+		wg.Wait()
+
+		// Combine results from all workers
+		for worker := 0; worker < numWorkers; worker++ {
+			for i := 0; i < 10; i++ {
+				handSumType[i] += parallelHandSumType[worker][i]
+			}
+			count += parallelCount[worker]
+		}
+	} else {
+		// Sequential validation (original algorithm)
+		var c0, c1, c2, c3, c4, c5, c6 int
+		var u0, u1, u2, u3, u4, u5 int
+
+		for c0 = 1; c0 < 53; c0++ {
+			u0 = HR[53+c0]
+			for c1 = c0 + 1; c1 < 53; c1++ {
+				u1 = HR[u0+c1]
+				for c2 = c1 + 1; c2 < 53; c2++ {
+					u2 = HR[u1+c2]
+					for c3 = c2 + 1; c3 < 53; c3++ {
+						u3 = HR[u2+c3]
+						for c4 = c3 + 1; c4 < 53; c4++ {
+							u4 = HR[u3+c4]
+							for c5 = c4 + 1; c5 < 53; c5++ {
+								u5 = HR[u4+c5]
+								for c6 = c5 + 1; c6 < 53; c6++ {
+									handSumType[HR[u5+c6]>>12]++
+									count++
+								}
 							}
 						}
 					}
@@ -312,22 +415,29 @@ func Generate() {
 		}
 	}
 
-	elapsed := time.Since(timings)
-	fmt.Printf("Elapsed time: %v\n", elapsed)
+	validationElapsed := time.Since(validationStart)
+	totalElapsed := time.Since(startTime)
+	if config.Verbose {
+		fmt.Printf("Validation time: %v\n", validationElapsed)
+		fmt.Printf("Total generation time: %v\n", totalElapsed)
 
-	for i := 0; i <= 9; i++ {
-		fmt.Printf("\n%16s = %d", handRanks[i], handSumType[i])
+		for i := 0; i <= 9; i++ {
+			fmt.Printf("\n%16s = %d", handRanks[i], handSumType[i])
+		}
+
+		fmt.Printf("\nTotal Hands = %d\n", count)
+	}
+	if config.OnProgress != nil {
+		config.OnProgress("Writing File", 90.0)
 	}
 
-	fmt.Printf("\nTotal Hands = %d\n", count)
-
-	fout, err := os.Create("HandRanks.dat")
+	fout, err := os.Create(filePath)
 	if err != nil {
-		fmt.Println("Problem creating the Output File!")
-		return
+		return fmt.Errorf("problem creating output file: %w", err)
 	}
 	defer fout.Close()
 
+	// Create byte array and write all at once (original method)
 	byteArray := make([]byte, len(HR)*8)
 
 	for i, v := range HR {
@@ -335,8 +445,9 @@ func Generate() {
 	}
 
 	_, err = fout.Write(byteArray[:])
-	if err != nil {
-		fmt.Println("Problem writing to the Output File!")
-		return
+
+	if config.OnProgress != nil {
+		config.OnProgress("Complete", 100.0)
 	}
+	return nil
 }
